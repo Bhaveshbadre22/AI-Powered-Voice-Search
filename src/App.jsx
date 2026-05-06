@@ -65,11 +65,15 @@ export default function App() {
     onSubmit,
   })
 
-  const typedWord = useTypewriter(CYCLING_WORDS)
+  const claudeStatus = useAppSelector(state => state.search.claudeStatus)
 
-  const scrollToGrid = () => {
-    gridRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  useEffect(() => {
+    if (claudeStatus === 'done') {
+      gridRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [claudeStatus])
+
+  const typedWord = useTypewriter(CYCLING_WORDS)
 
   return (
     <div style={{ minHeight: '100vh', background: '#F0EFF8' }}>
@@ -176,32 +180,6 @@ export default function App() {
         <ProductGrid />
       </div>
 
-      {/* ── Scroll-down indicator ── */}
-      <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '32px' }}>
-        <button
-          type="button"
-          onClick={scrollToGrid}
-          title="Scroll to products"
-          style={{
-            width: '36px',
-            height: '36px',
-            background: 'white',
-            border: '0.5px solid rgba(0,0,0,0.1)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            color: '#888780',
-            animation: 'bob 1.8s ease-in-out infinite',
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <polyline points="19 12 12 19 5 12" />
-          </svg>
-        </button>
-      </div>
 
     </div>
   )

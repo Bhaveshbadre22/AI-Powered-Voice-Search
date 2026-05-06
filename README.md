@@ -4,6 +4,32 @@ A React + Vite app that lets you **speak or type** a product query. It sends you
 
 ---
 
+## Screenshots
+
+<!-- 1 — Full-width hero -->
+<img src="docs/screenshots/01-hero-search.png" alt="Hero screen — mic UI with double pulse rings, example chips, and typed search with autocomplete" width="100%"/>
+
+<p align="center"><sub>Voice-first hero: double-ring pulse mic, tap-to-speak chips, and a typed search bar with live autocomplete suggestions</sub></p>
+
+---
+
+<!-- 2 & 3 — Side by side -->
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/screenshots/02-language-selector.png" alt="Language selector dropdown showing English, Hindi, Español, Français, Deutsch, 日本語" width="100%"/>
+      <br/><sub><strong>Multi-language voice input</strong> — switch recognition language; selection persists across sessions</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/screenshots/03-search-results.png" alt="Search results grid showing 12 matches for 'products under $80' with AI reason snippets" width="100%"/>
+      <br/><sub><strong>AI-ranked results</strong> — Claude returns matches with a per-card reason; natural-language price filters applied automatically</sub>
+    </td>
+  </tr>
+</table>
+
+
+---
+
 ## How It Works — Flow Diagram
 
 ```

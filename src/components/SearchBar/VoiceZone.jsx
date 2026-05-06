@@ -1,6 +1,7 @@
 import { useRef, useMemo, useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setQuery, setIsListening } from '../../features/search/searchSlice'
+import { clearFiltered } from '../../features/products/productsSlice'
 import { useProductSearch } from '../../hooks/useProductSearch'
 import { useSpeechRecognition } from '../../hooks/useSpeechRecognition'
 import { useSoundEffects } from '../../hooks/useSoundEffects'
@@ -54,6 +55,8 @@ export default function VoiceZone({ micToggleRef }) {
       playStop()
     } else {
       lastTranscriptRef.current = ''
+      dispatch(clearFiltered())
+      dispatch(setQuery(''))
       start()
       dispatch(setIsListening(true))
       playStart()
@@ -91,69 +94,82 @@ export default function VoiceZone({ micToggleRef }) {
         {isListening ? 'LISTENING...' : 'TAP TO SPEAK'}
       </p>
 
-      {/* Outer ring */}
+      {/* Outer ring — larger, purple pulse, follows with delay */}
       <div style={{
-        width: '160px',
-        height: '160px',
+        width: '186px',
+        height: '186px',
         borderRadius: '50%',
-        border: '1px solid rgba(127,119,221,0.25)',
+        border: `1px solid ${isListening ? 'rgba(127,119,221,0.28)' : 'rgba(127,119,221,0.15)'}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         margin: '0 auto 20px',
-        transition: 'all 0.3s',
-        animation: isListening ? 'pulse-ring-shadow 1.5s ease-out infinite' : 'none',
+        transition: 'border-color 0.3s',
+        animation: isListening ? 'pulse-ring-large 2s ease-out 0.5s infinite' : 'none',
       }}>
-        {/* Inner rounded-square button */}
-        <button
-          type="button"
-          onClick={handleToggle}
-          style={{
-            width: '110px',
-            height: '110px',
-            borderRadius: '50%',
-            background: 'white',
-            border: isListening
-              ? '0.5px solid rgba(232,89,60,0.3)'
-              : '0.5px solid rgba(0,0,0,0.08)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={e => {
-            if (!isListening) {
-              e.currentTarget.style.background = '#FAFAFA'
-              e.currentTarget.style.borderColor = 'rgba(127,119,221,0.3)'
-              e.currentTarget.style.transform = 'scale(1.03)'
-            }
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = 'white'
-            e.currentTarget.style.borderColor = isListening
-              ? 'rgba(232,89,60,0.3)'
-              : 'rgba(0,0,0,0.08)'
-            e.currentTarget.style.transform = 'scale(1)'
-          }}
-        >
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke={isListening ? '#E8593C' : '#1a1a2e'}
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ transition: 'stroke 0.2s' }}
+        {/* Inner ring — smaller, orange pulse, leads the ripple */}
+        <div style={{
+          width: '148px',
+          height: '148px',
+          borderRadius: '50%',
+          border: `1px solid ${isListening ? 'rgba(232,89,60,0.32)' : 'rgba(127,119,221,0.1)'}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'border-color 0.3s',
+          animation: isListening ? 'pulse-ring-small 2s ease-out infinite' : 'none',
+        }}>
+          {/* Mic button */}
+          <button
+            type="button"
+            onClick={handleToggle}
+            style={{
+              width: '110px',
+              height: '110px',
+              borderRadius: '50%',
+              background: 'white',
+              border: isListening
+                ? '0.5px solid rgba(232,89,60,0.3)'
+                : '0.5px solid rgba(0,0,0,0.08)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => {
+              if (!isListening) {
+                e.currentTarget.style.background = '#FAFAFA'
+                e.currentTarget.style.borderColor = 'rgba(127,119,221,0.3)'
+                e.currentTarget.style.transform = 'scale(1.03)'
+              }
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'white'
+              e.currentTarget.style.borderColor = isListening
+                ? 'rgba(232,89,60,0.3)'
+                : 'rgba(0,0,0,0.08)'
+              e.currentTarget.style.transform = 'scale(1)'
+            }}
           >
-            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-            <line x1="12" y1="19" x2="12" y2="23" />
-            <line x1="8" y1="23" x2="16" y2="23" />
-          </svg>
-        </button>
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke={isListening ? '#E8593C' : '#1a1a2e'}
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ transition: 'stroke 0.2s' }}
+            >
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Waveform bars — only when listening */}
